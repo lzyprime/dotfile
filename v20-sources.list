@@ -1,0 +1,139 @@
+# main
+deb [trusted=yes] http://pools.uniontech.com/desktop-professional eagle main contrib non-free
+deb-src [trusted=yes] http://pools.uniontech.com/desktop-professional eagle main contrib non-free
+deb [trusted=yes arch=i386,amd64,arm64,mips64el,sw_64] http://pools.uniontech.com/desktop-professional eagle/sp1 main contrib non-free
+deb [trusted=yes arch=i386,amd64,arm64,mips64el,sw_64] http://pools.uniontech.com/desktop-professional eagle/sp2 main contrib non-free
+deb [trusted=yes arch=i386,amd64,arm64,mips64el,sw_64] http://pools.uniontech.com/desktop-professional eagle/sp3 main contrib non-free
+deb [trusted=yes arch=i386,amd64,arm64,mips64el,sw_64] http://pools.uniontech.com/desktop-professional eagle/1031 main contrib non-free
+deb [trusted=yes arch=i386,amd64,arm64,mips64el,sw_64] http://pools.uniontech.com/desktop-professional eagle/1032 main contrib non-free
+deb [trusted=yes arch=i386,amd64,arm64,mips64el,sw_64] http://pools.uniontech.com/desktop-professional eagle/1040 main contrib non-free
+deb [trusted=yes arch=i386,amd64,arm64,mips64el,sw_64] http://pools.uniontech.com/desktop-professional eagle/1041 main contrib non-free
+deb [trusted=yes] http://pools.uniontech.com/desktop-professional eagle/1042 main contrib non-free
+deb [trusted=yes] http://pools.uniontech.com/desktop-professional eagle/1043 main contrib non-free
+deb [trusted=yes] http://pools.uniontech.com/desktop-professional eagle/1050 main contrib non-free
+deb [trusted=yes] http://pools.uniontech.com/desktop-professional eagle/1051 main contrib non-free
+deb [trusted=yes] http://pools.uniontech.com/desktop-professional eagle/1052 main contrib non-free
+deb [trusted=yes] http://pools.uniontech.com/desktop-professional eagle/1053 main contrib non-free
+deb [trusted=yes] http://pools.uniontech.com/desktop-professional eagle/1053append main contrib non-free
+deb [trusted=yes] http://pools.uniontech.com/desktop-professional eagle/1054 main contrib non-free
+deb [trusted=yes] http://pools.uniontech.com/desktop-professional eagle/1054append main contrib non-free
+deb [trusted=yes] http://pools.uniontech.com/desktop-professional eagle/1055 main contrib non-free
+deb [trusted=yes] http://pools.uniontech.com/desktop-professional eagle/1055append main contrib non-free
+deb [trusted=yes] http://pools.uniontech.com/desktop-professional eagle/1060 main contrib non-free
+deb [trusted=yes] http://pools.uniontech.com/desktop-professional eagle/1060append main contrib non-free
+deb [trusted=yes] http://pools.uniontech.com/desktop-professional eagle/1061 main contrib non-free
+deb [trusted=yes] http://pools.uniontech.com/desktop-professional eagle/1061append main contrib non-free
+deb [trusted=yes] http://pools.uniontech.com/desktop-professional eagle/1062 main contrib non-free
+deb [trusted=yes] http://pools.uniontech.com/desktop-professional eagle/1062append main contrib non-free
+deb [trusted=yes] http://pools.uniontech.com/desktop-professional eagle/1063 main contrib non-free
+deb [trusted=yes] http://pools.uniontech.com/desktop-professional eagle/1063append main contrib non-free
+deb [trusted=yes] http://pools.uniontech.com/desktop-professional eagle/1070 main contrib non-free
+deb [trusted=yes] http://pools.uniontech.com/desktop-professional eagle/1070append main contrib non-free
+deb [trusted=yes] http://pools.uniontech.com/desktop-professional eagle/1071 main contrib non-free
+deb [trusted=yes] http://pools.uniontech.com/desktop-professional eagle/1071append main contrib non-free
+deb [trusted=yes] http://pools.uniontech.com/desktop-professional eagle/1072 main contrib non-free
+deb [trusted=yes] http://pools.uniontech.com/desktop-professional eagle/1072append main contrib non-free
+deb [trusted=yes] http://pools.uniontech.com/desktop-professional eagle/1073 main contrib non-free
+deb-src [trusted=yes] http://pools.uniontech.com/desktop-professional eagle/1073 main contrib non-free
+deb [trusted=yes] http://pools.uniontech.com/desktop-professional eagle/1073append main contrib non-free
+deb [trusted=yes] http://pools.uniontech.com/desktop-professional eagle/1074 main contrib non-free
+deb [trusted=yes] http://pools.uniontech.com/desktop-professional eagle/1074append main contrib non-free
+
+deb [trusted=yes] http://pools.uniontech.com/ppa/dde-eagle eagle/1075 main contrib non-free
+
+deb [trusted=yes arch=mips64el] http://pools.uniontech.com/ppa/dde-eagle eagle/1073mips main contrib non-free
+deb [trusted=yes arch=mips64el] http://pools.uniontech.com/ppa/dde-eagle eagle/1072mips main contrib non-free
+deb [trusted=yes arch=mips64el] http://pools.uniontech.com/ppa/dde-eagle eagle/1071mips main contrib non-free
+deb [trusted=yes arch=mips64el] http://pools.uniontech.com/ppa/dde-eagle eagle/1070mips main contrib non-free
+
+# driver
+#deb http://pools.uniontech.com/desktop-professional-driver eagle/1071 main contrib non-free
+#deb http://pools.uniontech.com/ppa/dde-eagle-driver eagle/1074 main contrib non-free
+
+# security
+deb [arch=i386,amd64,arm64,mips64el] https://pools.uniontech.com/desktop-professional-rsync-security/ eagle/1030 main contrib non-free
+deb [arch=i386,amd64,arm64,mips64el,loongarch64] https://pools.uniontech.com/desktop-professional-rsync-security/ eagle/1040 main contrib non-free
+deb https://pools.uniontech.com/desktop-professional-rsync-security/ eagle/1050 main contrib non-free
+deb https://pools.uniontech.com/desktop-professional-rsync-security/ eagle/1060 main contrib non-free
+deb https://pools.uniontech.com/desktop-professional-rsync-security/ eagle/1070 main contrib non-free
+
+## sw_64
+deb [arch=sw_64] http://pools.uniontech.com/desktop-professional-sw eagle main contrib non-free
+deb [arch=sw_64] http://pools.uniontech.com/desktop-professional-sw eagle/1060 main contrib non-free
+deb [arch=sw_64] http://pools.uniontech.com/desktop-professional-sw eagle/1061 main contrib non-free
+deb [arch=sw_64] http://pools.uniontech.com/desktop-professional-sw eagle/1062 main contrib non-free
+deb [arch=sw_64] https://pools.uniontech.com/ppa/dde-eagle-sw-go eagle/1070 main contrib non-free
+
+## military
+deb [trusted=yes] https://pools.uniontech.com/ppa/dde-eagle-military/ military/1071 main contrib non-free
+
+
+deb [trusted=yes] http://pools.uniontech.com/appstore eagle-pro/appstore  non-free
+
+# hua wei
+deb [trusted=yes arch=arm64] https://pools.uniontech.com/ppa/dde-eagle-hw  eagle/klv1055 main non-free
+deb [trusted=yes arch=arm64] https://pools.uniontech.com/ppa/dde-eagle-hw  eagle/klu1055 main non-free
+deb [trusted=yes arch=arm64] https://pools.uniontech.com/ppa/dde-eagle-hw  eagle/pgv1055 main non-free
+deb [trusted=yes arch=arm64] https://pools.uniontech.com/ppa/dde-eagle-hw  eagle/pgw1055 main non-free
+deb [trusted=yes arch=arm64] https://pools.uniontech.com/ppa/dde-eagle-hw  eagle/klv1060 main non-free
+deb [trusted=yes arch=arm64] https://pools.uniontech.com/ppa/dde-eagle-hw  eagle/klu1060 main non-free
+deb [trusted=yes arch=arm64] https://pools.uniontech.com/ppa/dde-eagle-hw  eagle/pgv1060 main non-free
+deb [trusted=yes arch=arm64] https://pools.uniontech.com/ppa/dde-eagle-hw  eagle/pgw1060 main non-free
+deb [trusted=yes arch=arm64] https://pools.uniontech.com/ppa/dde-eagle-hw  eagle/klv1061 main non-free
+deb [trusted=yes arch=arm64] https://pools.uniontech.com/ppa/dde-eagle-hw  eagle/klu1061 main non-free
+deb [trusted=yes arch=arm64] https://pools.uniontech.com/ppa/dde-eagle-hw  eagle/pgv1061 main non-free
+deb [trusted=yes arch=arm64] https://pools.uniontech.com/ppa/dde-eagle-hw  eagle/pgw1061 main non-free
+deb [trusted=yes arch=arm64] https://pools.uniontech.com/ppa/dde-eagle-hw  eagle/klv1062 main non-free
+deb [trusted=yes arch=arm64] https://pools.uniontech.com/ppa/dde-eagle-hw  eagle/klu1062 main non-free
+deb [trusted=yes arch=arm64] https://pools.uniontech.com/ppa/dde-eagle-hw  eagle/pgv1062 main non-free
+deb [trusted=yes arch=arm64] https://pools.uniontech.com/ppa/dde-eagle-hw  eagle/pgw1062 main non-free
+deb [trusted=yes arch=arm64] https://pools.uniontech.com/ppa/dde-eagle-hw  eagle/klv1063 main non-free
+deb [trusted=yes arch=arm64] https://pools.uniontech.com/ppa/dde-eagle-hw  eagle/klu1063 main non-free
+deb [trusted=yes arch=arm64] https://pools.uniontech.com/ppa/dde-eagle-hw  eagle/pgv1063 main non-free
+deb [trusted=yes arch=arm64] https://pools.uniontech.com/ppa/dde-eagle-hw  eagle/pgw1063 main non-free
+deb [trusted=yes arch=arm64] https://pools.uniontech.com/ppa/dde-eagle-hw  eagle/pgx1070 main non-free
+deb [trusted=yes arch=arm64] https://pools.uniontech.com/ppa/dde-eagle-hw  eagle/pgx1070/tr6 main non-free
+deb [trusted=yes arch=arm64] https://pools.uniontech.com/ppa/dde-eagle-hw  eagle/pgx1070/tr6+1 main non-free
+deb [trusted=yes arch=arm64] https://pools.uniontech.com/ppa/dde-eagle-hw  eagle/pgxb1070 main non-free
+deb [trusted=yes arch=arm64] https://pools.uniontech.com/ppa/dde-eagle-hw  eagle/pgxb1070/tr6 main non-free
+deb [trusted=yes arch=arm64] https://pools.uniontech.com/ppa/dde-eagle-hw  eagle/pgxb1070/2to1 main non-free
+deb [trusted=yes arch=arm64] https://pools.uniontech.com/ppa/dde-eagle-hw  eagle/klv1071 main non-free
+deb [trusted=yes arch=arm64] https://pools.uniontech.com/ppa/dde-eagle-hw  eagle/klu1071 main non-free
+deb [trusted=yes arch=arm64] https://pools.uniontech.com/ppa/dde-eagle-hw  eagle/pgv1071 main non-free
+deb [trusted=yes arch=arm64] https://pools.uniontech.com/ppa/dde-eagle-hw  eagle/pgw1071 main non-free
+deb [trusted=yes arch=arm64] https://pools.uniontech.com/ppa/dde-eagle-hw  eagle/flmx1071 main non-free
+deb [trusted=yes arch=arm64] https://pools.uniontech.com/ppa/dde-eagle-hw  eagle/pgy1071 main non-free
+deb [trusted=yes arch=arm64] https://pools.uniontech.com/ppa/dde-eagle-hw  eagle/flmz1071 main non-free
+deb [trusted=yes arch=arm64] https://pools.uniontech.com/ppa/dde-eagle-hw  eagle/flmx1071/tr5 main non-free
+deb [trusted=yes arch=arm64] https://pools.uniontech.com/ppa/dde-eagle-hw  eagle/flmx1071/tr6 main non-free
+
+
+# 教育版
+#deb [trusted=yes] https://pools.uniontech.com/ppa/dde-eagle-gaea/ gaea/1071 main contrib non-free
+
+## tuanbiao
+#deb https://pools.uniontech.com/uos-desktop-professional/ eagle main contrib non-free
+
+# v23 
+#deb [trusted=yes] https://com-store-packages.uniontech.com/appstorev23 beige appstore
+#deb https://community-packages.deepin.com/driver-23/ driver non-free
+#deb https://community-packages.deepin.com/beige/ beige main commercial community
+
+# v20
+#deb https://com-store-packages.uniontech.com/appstore deepin appstore
+#deb https://community-packages.deepin.com/driver/ driver non-free
+#deb https://community-packages.deepin.com/printer eagle non-free
+#deb [trusted=yes arch=amd64] https://community-packages.deepin.com/deepin/ apricot main contrib non-free
+
+# 1032 loongarch64
+deb [arch=loongarch64] http://pools.uniontech.com/desktop-professional-loongarch eagle main contrib non-free
+#
+
+#linglong
+#deb https://ci.deepin.com/repo/obs/linglong:/CI:/release/Deepin_25/ ./
+deb http://pools.uniontech.com/ppa/dde-eagle-udcp/ eagle/1071 main contrib non-free
+
+## v25
+deb https://pools.uniontech.com/desktop-professional-V25/ snipe main community commercial
+deb https://pools.uniontech.com/desktop-professional-V25/ snipe/2500 main community commercial
+deb https://pools.uniontech.com/desktop-professional-V25/ snipe/2500u1 main community commercial

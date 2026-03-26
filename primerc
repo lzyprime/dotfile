@@ -1,0 +1,73 @@
+
+function git() {
+    # 如果第一个参数是 push，则进入自定义逻辑
+    if [ "$1" = "push" ]; then 
+        # 获取远程仓库 URL
+	local remote_name="${2:-origin}"
+        local remote_url=$(command git remote get-url "$remote_name" 2>/dev/null)
+
+        # 判断是否为特定的 Gerrit 域名
+        if [[ "$remote_url" == *"gerrit.uniontech.com"* ]]; then
+            echo "--- 检测到 Gerrit 仓库，执行自动修正与评审推送 ---"
+            
+            # 1. 修正身份信息（仅限当前仓库）
+            if [ "$(command git config user.email)" != "liuzhiyuan@uniontech.com" ]; then
+                command git config user.email "liuzhiyuan@uniontech.com"
+                command git commit --amend --no-edit --reset-author
+            fi
+            
+            # 2. 推送至 refs/for/
+            local branch="${3:-$(command git rev-parse --abbrev-ref HEAD)}"
+            shift $(( $# < 3 ? $# : 3 ))
+            command git push "${remote_name}" "${branch}:refs/for/${branch}" "$@"
+        else
+            # 普通仓库，执行原生的 git push
+            shift 1
+            command git push "$@"
+        fi
+    else
+        # 非 push 命令，直接透传
+        command git "$@"
+    fi
+}
+
+alias prime-apt='/home/prime/prime-apt/bin/prime-apt'
+
+
+# quilt
+if type quilt >/dev/null 2>&1; then
+	if [ ! -e "$HOME/.quiltrc" ]; then
+	echo '
+d=. ; while [ ! -d $d/debian -a $(readlink -e $d) != / ]; do d=$d/..; done
+if [ -d $d/debian ] && [ -z $QUILT_PATCHES ]; then
+    # if in Debian packaging tree with unset $QUILT_PATCHES
+    QUILT_PATCHES="debian/patches"
+    QUILT_PATCH_OPTS="--reject-format=unified"
+    QUILT_DIFF_ARGS="-p ab --no-timestamps --no-index --color=auto"
+    QUILT_REFRESH_ARGS="-p ab --no-timestamps --no-index"
+    QUILT_COLORS="diff_hdr=1;32:diff_add=1;34:diff_rem=1;31:diff_hunk=1;33:diff_ctx=35:diff_cctx=33"
+    if ! [ -d $d/debian/patches ]; then mkdir $d/debian/patches; fi
+fi
+' > "$HOME/.quiltrc"
+	fi
+	#	alias quilt='quilt --quiltrc="$HOME/.quiltrc"'
+fi
+# diffiso
+export DIFFISO_AS_ROOT=true
+
+# dch
+export DEBFULLNAME=liuzhiyuan
+export DEBEMAIL=liuzhiyuan@uniontech.com
+
+## nvm npm
+export NVM_DIR="$HOME/.config/nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+## osh theme
+
+if [[ "$SHELL" == */bash ]]; then
+	PS1="$PS1\n"
+	export PS1
+fi
+
