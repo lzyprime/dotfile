@@ -68,7 +68,7 @@ deb [arch=sw_64] https://pools.uniontech.com/ppa/dde-eagle-sw-go eagle/1070 main
 deb [trusted=yes] https://pools.uniontech.com/ppa/dde-eagle-military/ military/1071 main contrib non-free
 
 
-deb [trusted=yes] http://pools.uniontech.com/appstore eagle-pro/appstore  non-free
+# deb [trusted=yes] http://pools.uniontech.com/appstore eagle-pro/appstore  non-free
 
 # hua wei
 deb [trusted=yes arch=arm64] https://pools.uniontech.com/ppa/dde-eagle-hw  eagle/klv1055 main non-free
@@ -134,6 +134,16 @@ deb [arch=loongarch64] http://pools.uniontech.com/desktop-professional-loongarch
 deb http://pools.uniontech.com/ppa/dde-eagle-udcp/ eagle/1071 main contrib non-free
 
 ## v25
-deb https://pools.uniontech.com/desktop-professional-V25/ snipe main community commercial
-deb https://pools.uniontech.com/desktop-professional-V25/ snipe/2500 main community commercial
-deb https://pools.uniontech.com/desktop-professional-V25/ snipe/2500u1 main community commercial
+#deb https://pools.uniontech.com/desktop-professional-V25/ snipe main community commercial
+#deb https://pools.uniontech.com/desktop-professional-V25/ snipe/2500 main community commercial
+#deb https://pools.uniontech.com/desktop-professional-V25/ snipe/2500u1 main community commercial
+#
+#
+#
+deb [trusted=yes] https://aptly.uniontech.com/pkg/security-1050/release-candidate/5q2m5rGJ5Zyw5Yy65qGM6Z2i54mIQ1ZF5a6J5YWo5ryP5rSeMjYtMy0yMjAyNi0wMy0wMyAxNDoyNzoxOQ/ unstable main
+deb [trusted=yes] https://aptly.uniontech.com/pkg/security-1060/release-candidate/44CQ5bqU55So44CRc2VjMTA2MC3lvZLmoaPnrqHnkIblmagtMjAyNjAzMjMyMDI2LTAzLTIzIDE2OjE5OjA1/ unstable main
+deb [trusted=yes] https://aptly.uniontech.com/pkg/security-1050/release-candidate/44CQQ05OVkTpgJrmiqXmvI-mtJ7jgJFkZWVwaW4tZmFjZTIwMjYtMDMtMjMgMTc6MDM6NDE/ unstable main
+deb [trusted=yes] https://aptly.uniontech.com/pkg/security-1060/release-candidate/44CQQ05OVkTpgJrmiqXmvI-mtJ7jgJFkZGUtZGFlbW9uMjAyNi0wMy0yMyAxNzowODoxNw/ unstable main
+deb [trusted=yes] https://aptly.uniontech.com/pkg/security-1050/release-candidate/5q2m5rGJ5Zyw5Yy65qGM6Z2i54mIQ1ZF5a6J5YWo5ryP5rSeMjYtMy0zMjAyNi0wMy0xMSAwODo1NjoxNg/ unstable main
+deb [trusted=yes] https://aptly.uniontech.com/pkg/security-1060/release-candidate/44CQ5bqU55So44CRc2VjMTA2MC3ml6XljoYtMjAyNjAzMjQyMDI2LTAzLTI0IDE0OjI1OjIw/ unstable main
+
