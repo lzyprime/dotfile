@@ -1,0 +1,266 @@
+#!/bin/bash
+set -euf
+
+echo "version: 2025.5.25"
+
+ISO_SIGN_TOOL="${ISO_SIGN_TOOL:-/usr/local/bin/deepin-iso-sign}"
+
+function show_help() {
+	case ${1:-} in
+	cp)
+		echo "cp <iso文件路径> <ISO_DIR>, cp -a iso文件内容 <ISO_DIR>" ;;
+	mkfs) 
+		echo "mkfs <CHROOT_DIR> <FS_NAME>, mksquashfs <CHROOT_DIR> <FS_NAME> -comp xz" ;;
+	bind|unbind|chroot)
+		echo "bind <CHROOT_DIR>, mount --bind 挂载 /sys /dev /dev/pts /proc 到 <CHROOT_DIR>"
+		echo "unbind <CHROOT_DIR>, umount <CHROOT_DIR>/**/** 卸载所有内容"
+		echo "chroot <CHROOT_DIR> [cmd list], unbind <CHROOT_DIR> && bind <CHROOT_DIR> && chroot <CHROOT_DIR> [cmd list] && unbind <CHROOT_DIR>"
+		;;
+	sign)
+		echo "sign <文件路径> [sign 工具路径], deepin-iso-sign 签名&验签 文件" ;;
+	md5)
+		echo "md5 <ISO_DIR>, <ISO_DIR> 重新生成 md5sum.txt sha256sum.txt" ;;
+	*dev)
+		echo "enable-dev <CHROOT_DIR>, 开启开发者"
+		echo "disable-dev <CHROOT_DIR>, 关闭开发者"
+		;;
+	*verify)
+		echo "enable-verify <CHROOT_DIR>, 开启镜像签名检查; link deepin-iso-verify -> deepin-iso-sign"
+		echo "disable-verify <CHROOT_DIR>, 关闭镜像签名检查; link deepin-iso-verify -> true"
+		;;
+	mkiso)
+		echo "mkiso <ISO_DIR> [desc [arch]], xorriso -o [desc]-<arch>.iso <ISO_DIR>; arch会自动获取"
+		;;
+	enable*|disable*)
+		show_help dev
+		show_help verify
+		;;
+	*)
+	for i in cp mkfs bind sign md5 dev verify mkiso; do
+		show_help $i
+	done | column -s',' -t
+	;;
+    esac
+}
+SEP_COUNT=${COLUMNS:-40}
+python3 -c "print('-' * $SEP_COUNT)"
+show_help "${1:-}"
+python3 -c "print('-' * $SEP_COUNT)"
+
+function parse_args() {
+	for i in $(seq 1 $#); do
+		echo "\$$i = ${!i:-}"
+	done
+	case "${1:-}" in
+		cp)
+			FS_NAME=$2
+			ISO_DIR=$3
+		;;
+		bind|unbind|chroot|enable-dev|disable-dev|enable-verify|disable-verify)
+			CHROOT_DIR=$2
+			if [ "${1:-}" = chroot ]; then
+				CMD_LIST=()
+				for i in $(seq 3 $#); do
+					CMD_LIST+=("${!i:-}")
+				done
+			fi
+			;;
+		mkfs)
+			CHROOT_DIR=$2
+			FS_NAME=$3
+			;;
+		sign)
+			FS_NAME=$2
+			ISO_SIGN_TOOL="${3:-"$ISO_SIGN_TOOL"}"
+			;;
+		md5)
+			ISO_DIR=$2
+			;;
+		mkiso)
+			ISO_DIR=$2
+			ISO_DESC="${3+"${3}-"}"
+			ISO_ARCH="${4:-$(awk '{print $(NF-1)}' "$ISO_DIR/.disk/info")}"
+			;;
+	esac
+	if [ "${CHROOT_DIR:-}" != "" ] && [ ! -d "$CHROOT_DIR" ]; then
+		echo "E: |CHROOT_DIR=$CHROOT_DIR| 不存在"
+		return 1
+	fi
+
+}
+parse_args "$@"
+
+function func_cp() {
+	tmpdir=$(mktemp -d)
+	sudo mount "$FS_NAME" "$tmpdir"
+    cp -a "$tmpdir" "$ISO_DIR"
+	sudo umount "$tmpdir"
+	rmdir "$tmpdir"
+    echo "copy $FS_NAME file to $ISO_DIR. finish"
+}
+
+function func_bind() {
+    echo "mount /sys /proc /dev /dev/pts to $CHROOT_DIR"
+	for fs in /sys /dev /dev/pts /proc; do sudo mount --bind "$fs" "${CHROOT_DIR}/${fs}"; done
+	sudo cp /etc/resolv.conf "${CHROOT_DIR}/etc/resolv.conf" || true
+	if [ ! -f "${CHROOT_DIR}/etc/hosts.oembuild-back" ]; then
+		sudo mv "${CHROOT_DIR}/etc/hosts"{,.oembuild-back}
+		sudo cp /etc/hosts "${CHROOT_DIR}/etc/hosts"
+	fi
+}
+
+function func_unbind() {
+    realpath "${CHROOT_DIR}"
+    echo "before umount, findmnt:"
+    findmnt -l | grep "^$(realpath "${CHROOT_DIR}")" | awk '{print $1}' || true
+    findmnt -l | grep "^$(realpath "${CHROOT_DIR}")" | awk '{print $1}' | sort -r | while read -r l; do sudo umount "$l"; done
+    echo "---"
+    echo "after umount, findmnt:"
+    findmnt -l | grep "^$(realpath "${CHROOT_DIR}")" | awk '{print $1}' || true
+	echo "---"
+	echo clean resolv.conf .bash_history
+    (: | sudo tee "${CHROOT_DIR}"/root/.bash_history) || true
+	(: | sudo tee "${CHROOT_DIR}/etc/resolv.conf") || true
+	if [ -f "${CHROOT_DIR}/etc/hosts.oembuild-back" ]; then
+		sudo mv "${CHROOT_DIR}/etc/hosts"{.oembuild-back,}
+	fi
+}
+
+function func_chroot() {
+	echo "################# before chroot ####################"
+	func_unbind
+	func_bind
+	echo "################# in chroot ####################"
+	echo ""
+	if [ "${#CMD_LIST[@]}" = 0 ]; then
+		sudo chroot "$CHROOT_DIR"
+	else
+		sudo chroot "$CHROOT_DIR" "${CMD_LIST[@]}"
+	fi
+	echo ""
+	echo "################# after chroot ####################"
+	func_unbind
+	echo ""
+	echo "################# finish ####################"
+}
+
+function func_mkfs() {
+	if [ -e "$FS_NAME" ]; then
+		echo "E: |file=$FS_NAME| 已存在"
+		return 2
+	fi
+	sudo mksquashfs "$CHROOT_DIR" "$FS_NAME" -comp xz
+}
+function func_enable-dev() {
+	_dev_dir="$CHROOT_DIR/var/lib/deepin/developer-mode"
+	sudo mkdir -p "$_dev_dir"
+	sudo chattr -i "$_dev_dir/enabled" 2>/dev/null || true
+	echo -n 1 | sudo tee "$_dev_dir/enabled"
+	sudo chattr +i "$_dev_dir/enabled"
+}
+function func_disable-dev() {
+	_dev_dir="$CHROOT_DIR/var/lib/deepin/developer-mode"
+	[ -f "$_dev_dir/enabled" ] && {
+		sudo chattr -i "$_dev_dir/enabled" || true
+		rm -rf "$_dev_dir/enabled"
+	}
+}
+function func_enable-verify() {
+	_f="$CHROOT_DIR/usr/bin/deepin-iso-verify"
+	sudo rm -rf "$_f"
+	sudo ln -s "/usr/bin/deepin-iso-sign" "$_f"
+}
+function func_disable-verify() {
+	_f="$CHROOT_DIR/usr/bin/deepin-iso-verify"
+	sudo rm -rf "$_f"
+	sudo ln -s "/usr/bin/true" "$_f"
+}
+
+function func_enable-security() {
+	sudo dbus-send --print-reply --type=method_call --system --dest=com.deepin.daemon.ACL /org/deepin/security/hierarchical/Control org.deepin.security.hierarchical.Control.SetMode boolean:true
+}
+
+function func_disable-security() {
+	sudo dbus-send --print-reply --type=method_call --system --dest=com.deepin.daemon.ACL /org/deepin/security/hierarchical/Control org.deepin.security.hierarchical.Control.SetMode boolean:false
+}
+
+function func_sign() {
+	echo "sign & verify file: $FS_NAME"
+	for((i=0; i<5; i++)); do
+		sudo "$ISO_SIGN_TOOL" -conf /etc/deepin/iso-sign/llconfig.yaml -f "$FS_NAME"
+		if "$ISO_SIGN_TOOL" -f "$FS_NAME" -s "$FS_NAME"_sign; then
+			echo "验签成功"
+			return 0
+		fi
+	done
+	echo "签名失败"
+	return 1
+}
+
+function func_md5(){
+	hash_file="$(mktemp)"
+	algorithms=(sha256sum md5sum)
+	for algorithm in "${algorithms[@]}"; do
+		echo "refresh ${algorithm}"
+
+		(cd "$ISO_DIR"; find . -type f -exec sudo "$algorithm" {} \; | grep -v "boot.cat" | grep -v "boot.catalog") > "${hash_file}"
+		for i in "${algorithms[@]}"; do sed -i "/${i}.txt/d" "${hash_file}"; done
+
+		diff <(sort "$ISO_DIR/${algorithm}.txt") <(sort "${hash_file}") || true
+
+		sudo cp "${hash_file}" "$ISO_DIR/${algorithm}.txt"
+		sudo chmod +r "$ISO_DIR/${algorithm}.txt"
+	done
+	rm "${hash_file}"
+}
+
+function func_mkiso() {
+	_iso_name="${ISO_DESC}${ISO_ARCH}.iso"
+
+	case "$ISO_ARCH" in
+	amd64)
+		xorriso -as mkisofs -V "UOS 20" \
+		-no-pad -isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin \
+		-c isolinux/boot.cat \
+		-b isolinux/isolinux.bin \
+		-no-emul-boot -boot-load-size 4 -boot-info-table \
+		-eltorito-alt-boot -e boot/efi.img -no-emul-boot \
+		-isohybrid-gpt-basdat -isohybrid-apm-hfsplus \
+        -o "$_iso_name" "./$ISO_DIR"
+		;;
+	arm64)
+		xorriso -as mkisofs -joliet-long -r -J -c boot.cat -boot-load-size 4 -boot-info-table \
+        -eltorito-alt-boot --efi-boot boot/efi.img -no-emul-boot \
+        -file_name_limit 250 \
+		-publisher "UOS <http://www.uniontech.com>" \
+        -appid "UOS 20" -V "UOS 20" \
+        -o "$_iso_name" "./$ISO_DIR"
+		;;
+	mips64el)
+		xorriso -as mkisofs -V "UOS 20" -R -r -J -joliet-long -l -cache-inodes \
+        -appid "UOS 20" -publisher "UOS <http://www.uniontech.com>" -V "UOS 20" \
+        -o "$_iso_name" "./$ISO_DIR"
+		;;
+	loongarch64)
+		xorriso -as mkisofs -no-pad -full-iso9660-filenames -volid "UOS" \
+        -eltorito-catalog boot.catalog \
+        -eltorito-alt-boot \
+        -no-emul-boot -boot-load-size 4 -boot-info-table \
+        -isohybrid-gpt-basdat -isohybrid-apm-hfsplus \
+        -o "$_iso_name" "./$ISO_DIR"
+		;;
+	sw_64)
+		xorriso -as mkisofs -r -J -c boot.cat --joliet-long \
+		-boot-load-size 4 -boot-info-table -eltorito-alt-boot \
+		--efi-boot boot/efi.img -no-emul-boot \
+		-V "UOS 20" \
+        -o "$_iso_name" "./$ISO_DIR"
+		;;
+	*)
+		echo "|ARCH=$ISO_ARCH| not support."
+		return 1
+		;;
+	esac
+}
+
+if [ "${1:-}" != "" ]; then "func_${1}"; fi
