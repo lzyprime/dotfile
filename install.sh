@@ -29,14 +29,14 @@ function show-latest() {
 	done
 }
 
-install_func=(wps)
+install_func+=(wps)
 function wps() {
 	if [ ! -f "wps.deb" ]; then
 		wget -O wps.deb "${pkg_latest[wps]}"
 	fi
 	sudo apt install ./wps.deb
 }
-install_func=('ombash')
+install_func+=('ombash')
 function ombash() {
 	bash -c "$(wget https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh -O -)"
 
@@ -139,6 +139,13 @@ function weixin() {
 	sudo apt install ./weixin.deb
 }
 
+install_func+=(spotify)
+function spotify() {
+	curl -sS https://download.spotify.com/debian/pubkey_5384CE82BA52C83A.asc | sudo gpg --dearmor --yes -o /etc/apt/trusted.gpg.d/spotify.gpg
+	echo "deb https://repository.spotify.com stable non-free" | sudo tee /etc/apt/sources.list.d/spotify.list
+	sudo apt-get update
+	sudo apt-get install spotify-client
+}
 declare -A install_desc=(
 [wps]="安装wps, 优先使用 ./wps.deb"
 [ombash]="安装 oh-my-bash"

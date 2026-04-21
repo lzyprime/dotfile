@@ -1,6 +1,6 @@
 function FindProxyForURL(_url_, host) {
 
-    var pos, exits = ["DIRECT", "PROXY proxy01.uniontech.com:3128; PROXY proxy02.uniontech.com:3128; PROXY 127.0.0.1:6666; DIRECT", "PROXY 127.0.0.1:6666; DIRECT"];
+    var pos, exits = ["DIRECT", "PROXY proxy01.uniontech.com:3128; PROXY proxy02.uniontech.com:3128; PROXY 127.0.0.1:7897; DIRECT", "PROXY 127.0.0.1:7897; DIRECT"];
     var list = {
 	"uniontech.com": 0,
 	"openai.com": 2,
